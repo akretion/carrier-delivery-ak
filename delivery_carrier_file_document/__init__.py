@@ -7,7 +7,3 @@
 #  @author David BEAL <david.beal@akretion.com>
 #
 ##############################################################################
-
-from . import stock
-from . import file_exchange
-from . import partner
