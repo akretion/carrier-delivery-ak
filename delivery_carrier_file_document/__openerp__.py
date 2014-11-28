@@ -45,6 +45,7 @@ Contributors
     'website': 'http://www.akretion.com/',
     'data': [
         'stock_view.xml',
+        'security/ir.model.access.csv',
     ],
     'license': 'AGPL-3',
     'external_dependencies': {
