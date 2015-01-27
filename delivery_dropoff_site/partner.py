@@ -56,6 +56,24 @@ class ResPartner(orm.Model):
             partner_ids.append(dropoff.partner_id.id)
         return partner_ids
 
+    def _get_delivery_type_selection(self, cr, uid, ids, context=None):
+        return [('', ''), ('customer', 'Customer')]
+
+    def __get_delivery_type_selection(self, cr, uid, ids, context=None):
+        return self._get_delivery_type_selection(
+            cr, uid, ids, context=context)
+
+    def _get_delivery_type_from_partner(self, cr, uid, ids, field, args,
+                                        context=None):
+        for elm in self.browse(cr, uid, ids, context=context):
+            if elm.customer:
+                return 'customer'
+
+    def __get_delivery_type_from_partner(self, cr, uid, ids, field, args,
+                                         context=None):
+        return self._get_delivery_type_from_partner(
+            cr, uid, ids, field, args, context=context)
+
     _columns = {
         'dropoff_site_id': fields.function(
             _get_dropoff_site,
@@ -68,6 +86,18 @@ class ResPartner(orm.Model):
             },
             help="... are specific areas where carriers ship merchandises.\n"
                  "Recipients comes pick up their parcels in these sites",),
+        'delivery_type': fields.function(
+            __get_delivery_type_from_partner,
+            string='Delivery Type',
+            type='selection',
+            selection=__get_delivery_type_selection,
+            store=True,
+            #store={
+            #    'partner.dropoff.site': (_get_partner_ids_from_dropoffsite,
+            #                             ['partner_id'], 10),
+            #},
+            help="Used to define the domain of "
+                 "the partner_id field in the delivery orders",),
     }
 
     def name_search(self, cr, uid, name='', args=None, operator='ilike',
